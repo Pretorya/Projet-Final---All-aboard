@@ -1,0 +1,7 @@
+<div class="chat-row" data-conversation-messages-target="message" data-author-id="<%= message.user_id %>">
+  <img src="<%= message.user.profile_avatar %>" alt="<%= message.user.display_name %>" class="message-avatar w-8 h-8 rounded-full">
+  <div class="message-bubble rounded-2xl px-4 py-3">
+    <p class="text-sm"><%= message.body %></p>
+    <span class="text-[10px] text-white/70 mt-1 block"><%= message.created_at.strftime("%H:%M") %></span>
+  </div>
+</div>

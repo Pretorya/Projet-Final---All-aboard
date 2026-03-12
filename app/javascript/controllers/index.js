@@ -6,3 +6,12 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import MessageFormController from "./message_form_controller"
+application.register("message-form", MessageFormController)
+
+import ConversationMessagesController from "./conversation_messages_controller"
+application.register("conversation-messages", ConversationMessagesController)

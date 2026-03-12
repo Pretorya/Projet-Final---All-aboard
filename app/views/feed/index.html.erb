@@ -1,0 +1,126 @@
+<% content_for :title, "StudyLink" %>
+
+<div class="animate-fade-in">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="hidden lg:block lg:col-span-3 space-y-6">
+      <div class="glass rounded-2xl p-6 sticky top-24">
+        <h3 class="font-semibold mb-4 text-gray-300">Filtres par matière</h3>
+        <div class="space-y-2">
+          <%= link_to authenticated_root_path, class: subject_filter_classes(nil, @selected_subject) do %>
+            <i class="fas fa-infinity"></i> Toutes les matières
+          <% end %>
+
+          <% @subjects.each do |subject| %>
+            <%= link_to authenticated_root_path(subject: subject.slug), class: subject_filter_classes(subject, @selected_subject) do %>
+              <i class="fas <%= subject.icon %>" style="color: <%= subject.accent_color %>"></i>
+              <span><%= subject.name %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6 sticky top-80">
+        <h3 class="font-semibold mb-4 text-gray-300">Top contributeurs</h3>
+        <div class="space-y-4">
+          <% @top_contributors.each do |user| %>
+            <div class="flex items-center gap-3">
+              <img src="<%= user.profile_avatar %>" alt="<%= user.display_name %>" class="w-10 h-10 rounded-full">
+              <div class="flex-1">
+                <p class="font-medium text-sm"><%= user.display_name %></p>
+                <p class="text-xs text-gray-500"><%= user.contribution_count %> aides données</p>
+              </div>
+              <span class="text-yellow-400 text-xs"><i class="fas fa-star"></i> <%= format("%.1f", user.rating) %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-1 lg:col-span-6 space-y-6">
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+        <div class="flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer group" data-action="modal#open">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent p-[2px] group-hover:scale-110 transition-transform">
+            <div class="w-full h-full rounded-2xl bg-surface flex items-center justify-center">
+              <i class="fas fa-plus text-primary"></i>
+            </div>
+          </div>
+          <span class="text-xs text-gray-400">Nouveau</span>
+        </div>
+
+        <% @subjects.first(5).each do |subject| %>
+          <%= link_to authenticated_root_path(subject: subject.slug), class: "flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer" do %>
+            <div class="w-16 h-16 rounded-2xl border flex items-center justify-center transition-colors" style="background-color: <%= "#{subject.accent_color}1F" %>; border-color: <%= "#{subject.accent_color}4D" %>; color: <%= subject.accent_color %>;">
+              <i class="fas <%= subject.icon %> text-xl"></i>
+            </div>
+            <span class="text-xs text-gray-400"><%= subject.name %></span>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="glass rounded-2xl p-4 flex items-center gap-4">
+        <img src="<%= current_user.profile_avatar %>" alt="<%= current_user.display_name %>" class="w-10 h-10 rounded-full">
+        <button type="button" data-action="modal#open" class="flex-1 text-left bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-400 hover:border-primary transition-colors">
+          Demander de l'aide sur un sujet...
+        </button>
+        <button type="button" data-action="modal#open" class="p-3 rounded-xl bg-primary/20 text-primary hover:bg-primary/30 transition-colors">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="space-y-6">
+        <% if @posts.any? %>
+          <%= render @posts %>
+        <% else %>
+          <div class="glass rounded-2xl p-10 text-center text-gray-400">
+            <i class="fas fa-sparkles text-4xl text-primary mb-4"></i>
+            <p>Aucune requête ne correspond encore à ce filtre.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="hidden lg:block lg:col-span-3 space-y-6">
+      <div class="glass rounded-2xl p-6 sticky top-24">
+        <h3 class="font-semibold mb-4 text-gray-300">Tendances du jour</h3>
+        <div class="space-y-4">
+          <% @trending_subjects.each do |subject| %>
+            <%= link_to authenticated_root_path(subject: subject.slug), class: "flex items-center gap-3 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors" do %>
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: <%= "#{subject.accent_color}1F" %>; color: <%= subject.accent_color %>;">
+                <i class="fas <%= subject.icon %>"></i>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium"><%= subject.name %></p>
+                <p class="text-xs text-gray-500"><%= subject.posts_count %> demandes au total</p>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6 sticky top-64">
+        <h3 class="font-semibold mb-4 text-gray-300">Vos statistiques</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-center p-4 bg-white/5 rounded-xl">
+            <p class="text-2xl font-bold text-primary"><%= current_user.contribution_count %></p>
+            <p class="text-xs text-gray-500 mt-1">Aides données</p>
+          </div>
+          <div class="text-center p-4 bg-white/5 rounded-xl">
+            <p class="text-2xl font-bold text-accent"><%= current_user.posts.count %></p>
+            <p class="text-xs text-gray-500 mt-1">Requêtes</p>
+          </div>
+          <div class="text-center p-4 bg-white/5 rounded-xl col-span-2">
+            <p class="text-2xl font-bold text-green-400"><%= format("%.1f", current_user.rating) %></p>
+            <p class="text-xs text-gray-500 mt-1">Note moyenne</p>
+            <div class="flex justify-center gap-1 mt-2 text-yellow-400 text-xs">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+<%= turbo_frame_tag dom_id(post, :card) do %>
+  <% current_like = post.likes.find { |like| like.user_id == current_user.id } %>
+  <% current_bookmark = post.bookmarks.find { |bookmark| bookmark.user_id == current_user.id } %>
+
+  <article class="post-card glass rounded-2xl overflow-hidden animate-slide-up">
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-center gap-3">
+          <img src="<%= post.user.profile_avatar %>" alt="<%= post.user.display_name %>" class="w-12 h-12 rounded-full border-2 border-primary/30">
+          <div>
+            <h4 class="font-semibold"><%= post.user.display_name %></h4>
+            <p class="text-xs text-gray-500"><%= relative_time(post.created_at) %> • <%= post.education_level.presence || post.user.education_level.presence || "Étudiant" %></p>
+          </div>
+        </div>
+        <span class="text-xs text-gray-500"><%= post.subject.name %></span>
+      </div>
+
+      <h3 class="text-lg font-semibold mb-2"><%= post.title %></h3>
+      <p class="text-gray-300 mb-4 text-sm leading-relaxed"><%= post.body %></p>
+
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag-badge px-3 py-1 rounded-full text-xs font-medium" style="color: <%= post.subject.accent_color %>;">
+          #<%= post.subject.name %>
+        </span>
+        <% post.tags.each do |tag| %>
+          <%= link_to authenticated_root_path(tag: tag.slug), class: "tag-badge px-3 py-1 rounded-full text-xs font-medium text-primary" do %>
+            #<%= tag.name %>
+          <% end %>
+        <% end %>
+        <% if post.urgent? %>
+          <span class="px-3 py-1 rounded-full text-xs font-medium text-orange-400 border border-orange-400/30 bg-orange-400/10">🔥 Urgent</span>
+        <% end %>
+      </div>
+
+      <% if post.code_snippet.present? %>
+        <pre class="bg-black/30 rounded-xl p-4 mb-4 font-mono text-sm text-green-400 border border-white/5 overflow-x-auto whitespace-pre-wrap"><%= post.code_snippet %></pre>
+      <% end %>
+
+      <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-4 sm:gap-6">
+          <% if current_like %>
+            <%= button_to like_path(current_like), method: :delete, class: "flex items-center gap-2 text-pink-500 transition-colors group", form_class: "inline-block" do %>
+              <i class="fas fa-heart text-xl scale-110"></i>
+              <span class="text-sm"><%= post.likes_count %></span>
+            <% end %>
+          <% else %>
+            <%= button_to likes_path(post_id: post.id), method: :post, class: "flex items-center gap-2 text-gray-400 hover:text-pink-500 transition-colors group", form_class: "inline-block" do %>
+              <i class="far fa-heart text-xl group-hover:scale-110 transition-transform"></i>
+              <span class="text-sm"><%= post.likes_count %></span>
+            <% end %>
+          <% end %>
+
+          <span class="flex items-center gap-2 text-gray-400">
+            <i class="far fa-comment text-xl"></i>
+            <span class="text-sm"><%= post.comments_count %> réponse<%= "s" if post.comments_count > 1 %></span>
+          </span>
+
+          <% if current_bookmark %>
+            <%= button_to bookmark_path(current_bookmark), method: :delete, class: "flex items-center gap-2 text-blue-400 transition-colors", form_class: "inline-block" do %>
+              <i class="fas fa-bookmark text-xl"></i>
+            <% end %>
+          <% else %>
+            <%= button_to bookmarks_path(post_id: post.id), method: :post, class: "flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors", form_class: "inline-block" do %>
+              <i class="far fa-bookmark text-xl"></i>
+            <% end %>
+          <% end %>
+        </div>
+
+        <% unless post.user == current_user %>
+          <%= button_to conversations_path(recipient_id: post.user.id, post_id: post.id), method: :post, class: "text-sm text-primary hover:text-white transition-colors font-medium", form_class: "inline-block" do %>
+            Aider <i class="fas fa-arrow-right ml-1"></i>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white/5 p-4 border-t border-white/10 space-y-4">
+      <% post.comments.last(2).each do |comment| %>
+        <div class="flex gap-3">
+          <img src="<%= comment.user.profile_avatar %>" alt="<%= comment.user.display_name %>" class="w-8 h-8 rounded-full">
+          <div class="flex-1">
+            <p class="text-sm"><span class="font-semibold"><%= comment.user.display_name %></span> <span class="text-gray-500 text-xs">• <%= relative_time(comment.created_at) %></span></p>
+            <p class="text-sm text-gray-300 mt-1"><%= comment.body %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_with model: Comment.new, url: comments_path, class: "flex gap-3 items-start" do |form| %>
+        <%= form.hidden_field :post_id, value: post.id %>
+        <img src="<%= current_user.profile_avatar %>" alt="<%= current_user.display_name %>" class="w-8 h-8 rounded-full">
+        <div class="flex-1 flex gap-2">
+          <%= form.text_field :body, placeholder: "Écrire une réponse rapide...", class: "flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-primary" %>
+          <%= form.submit "Répondre", class: "px-4 py-2 rounded-xl bg-primary hover:bg-primary/80 text-sm font-medium transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </article>
+<% end %>
