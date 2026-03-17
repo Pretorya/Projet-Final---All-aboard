@@ -67,8 +67,8 @@
         </div>
 
         <% unless post.user == current_user %>
-          <%= button_to conversations_path(recipient_id: post.user.id, post_id: post.id), method: :post, class: "text-sm text-primary hover:text-white transition-colors font-medium", form_class: "inline-block" do %>
-            Aider <i class="fas fa-arrow-right ml-1"></i>
+          <%= button_to conversations_path(recipient_id: post.user.id, post_id: post.id), method: :post, class: "text-sm text-primary hover:text-white transition-colors font-medium", form_class: "inline-block", data: { turbo_frame: "_top" } do %>
+            <i class="fas fa-lock mr-1"></i> Message privé
           <% end %>
         <% end %>
       </div>

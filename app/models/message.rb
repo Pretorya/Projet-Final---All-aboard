@@ -11,11 +11,13 @@ class Message < ApplicationRecord
   private
 
   def broadcast_to_conversation
-    broadcast_append_to(
-      conversation,
-      target: "#{dom_id(conversation)}_messages",
-      partial: "messages/message",
-      locals: { message: self }
-    )
+    conversation.users.where.not(id: user_id).each do |recipient|
+      broadcast_append_to(
+        [ conversation, recipient ],
+        target: "#{dom_id(conversation)}_messages",
+        partial: "messages/message",
+        locals: { message: self }
+      )
+    end
   end
 end

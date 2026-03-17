@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :authenticate_user!
 
   def create
@@ -9,7 +10,13 @@ class MessagesController < ApplicationController
       @conversation.mark_read_for!(current_user)
 
       respond_to do |format|
-        format.turbo_stream { head :ok }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "#{dom_id(@conversation)}_messages",
+            partial: "messages/message",
+            locals: { message: @message }
+          )
+        end
         format.html { redirect_to conversation_path(@conversation) }
       end
     else

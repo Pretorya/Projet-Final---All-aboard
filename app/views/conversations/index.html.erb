@@ -23,7 +23,7 @@
     <% if @conversation.present? %>
       <% peer = @conversation.other_participant(current_user) %>
       <div class="<%= params[:id].present? ? "flex" : "hidden md:flex" %> flex-1 flex-col bg-black/20">
-        <%= turbo_stream_from @conversation %>
+        <%= turbo_stream_from [@conversation, current_user] %>
 
         <div class="p-4 border-b border-white/10 flex items-center justify-between">
           <div class="flex items-center gap-3">
