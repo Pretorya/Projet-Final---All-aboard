@@ -1,7 +1,22 @@
 <div class="chat-row" data-conversation-messages-target="message" data-author-id="<%= message.user_id %>">
   <img src="<%= message.user.profile_avatar %>" alt="<%= message.user.display_name %>" class="message-avatar w-8 h-8 rounded-full">
   <div class="message-bubble rounded-2xl px-4 py-3">
-    <p class="text-sm"><%= message.body %></p>
+    <% if message.body.present? %>
+      <p class="text-sm"><%= message.body %></p>
+    <% end %>
+    <% if message.attachment.attached? %>
+      <% if message.attachment.image? %>
+        <div class="mt-2">
+          <%= image_tag message.attachment, class: "max-w-xs rounded-xl max-h-64 object-cover cursor-pointer", loading: "lazy" %>
+        </div>
+      <% else %>
+        <div class="mt-2 flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 text-xs">
+          <i class="fas fa-file text-primary"></i>
+          <%= link_to message.attachment.filename.to_s, rails_blob_path(message.attachment, disposition: :attachment), class: "text-primary hover:underline truncate max-w-[180px]", target: "_blank", rel: "noopener noreferrer" %>
+          <span class="text-white/50 ml-auto"><%= number_to_human_size(message.attachment.byte_size) %></span>
+        </div>
+      <% end %>
+    <% end %>
     <span class="text-[10px] text-white/70 mt-1 block"><%= message.created_at.strftime("%H:%M") %></span>
   </div>
 </div>

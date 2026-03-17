@@ -71,6 +71,7 @@
 
       <%= render "shared/mobile_nav" %>
       <%= render "shared/create_post_modal" %>
+      <%= render "subject_requests/modal", subject_request: @new_subject_request %>
     <% else %>
       <%= yield %>
     <% end %>

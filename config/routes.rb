@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :comments, only: :create
     resources :likes, only: [ :create, :destroy ]
     resources :bookmarks, only: [ :create, :destroy ]
+    resources :subject_requests, only: :create
     resources :conversations, path: "messages", only: [ :index, :show, :create ] do
       resources :messages, only: :create
     end
