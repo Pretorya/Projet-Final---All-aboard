@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     root "feed#index", as: :authenticated_root
     get "feed" => "feed#index"
     get "explore" => "explore#index"
+    get "my-posts" => "my_posts#index"
 
     resources :posts, only: :create
     resources :comments, only: :create
