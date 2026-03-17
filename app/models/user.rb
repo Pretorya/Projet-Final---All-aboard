@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  enum :role, { user: "user", admin: "admin" }
+
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy

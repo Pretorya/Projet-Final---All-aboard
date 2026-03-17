@@ -9,8 +9,8 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def after_sign_in_path_for(_resource)
-    authenticated_root_path
+  def after_sign_in_path_for(resource)
+    resource.admin? ? admin_dashboard_path : authenticated_root_path
   end
 
   def after_sign_out_path_for(_resource_or_scope)
@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     when "conversations", "messages"
       :messages
     end
+  end
+
+  def authenticate_admin!
+    redirect_to authenticated_root_path, alert: "Accès non autorisé" unless current_user&.admin?
   end
 
   private
