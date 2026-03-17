@@ -15,7 +15,7 @@
         <% end %>
         <%= link_to explore_path, class: feed_nav_classes(:explore) do %>
           <i class="fas fa-compass"></i>
-          <span class="font-medium">Explorer</span>
+          <span class="font-medium">Matières</span>
         <% end %>
         <%= link_to conversations_path, class: "#{feed_nav_classes(:messages)} relative" do %>
           <i class="fas fa-comment-dots"></i>
@@ -46,8 +46,8 @@
             <%= link_to edit_user_registration_path, class: "block px-4 py-2 text-sm rounded-lg hover:bg-white/10" do %>
               Mon profil
             <% end %>
-            <%= link_to edit_user_registration_path, class: "block px-4 py-2 text-sm rounded-lg hover:bg-white/10" do %>
-              Paramètres
+            <%= link_to my_posts_path, class: "block px-4 py-2 text-sm rounded-lg hover:bg-white/10" do %>
+              Mes posts
             <% end %>
             <div class="border-t border-white/10 mt-2 pt-2">
               <%= button_to destroy_user_session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-red-400 rounded-lg hover:bg-white/10" do %>
