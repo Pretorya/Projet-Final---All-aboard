@@ -1,9 +1,9 @@
 <% content_for :title, "StudyLink" %>
 
 <div class="animate-fade-in">
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <div class="hidden lg:block lg:col-span-3 space-y-6">
-      <div class="glass rounded-2xl p-6 sticky top-24">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div class="hidden lg:block lg:col-span-3 space-y-6 sticky top-24">
+      <div class="glass rounded-2xl p-6">
         <h3 class="font-semibold mb-4 text-gray-300">Filtres par matière</h3>
         <div class="space-y-2">
           <%= link_to authenticated_root_path, class: subject_filter_classes(nil, @selected_subject) do %>
@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="glass rounded-2xl p-6 sticky top-80">
+      <div class="glass rounded-2xl p-6">
         <h3 class="font-semibold mb-4 text-gray-300">Top contributeurs</h3>
         <div class="space-y-4">
           <% @top_contributors.each do |user| %>
@@ -37,19 +37,19 @@
     </div>
 
     <div class="col-span-1 lg:col-span-6 space-y-6">
-      <div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-        <div class="flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer group" data-action="modal#open">
+      <div class="flex flex-wrap gap-4 justify-center">
+        <button type="button" class="w-20 flex flex-col items-center gap-2 cursor-pointer group" data-action="click->modal#open">
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent p-[2px] group-hover:scale-110 transition-transform">
             <div class="w-full h-full rounded-2xl bg-surface flex items-center justify-center">
               <i class="fas fa-plus text-primary"></i>
             </div>
           </div>
           <span class="text-xs text-gray-400">Nouveau</span>
-        </div>
+        </button>
 
         <% @subjects.first(5).each do |subject| %>
-          <%= link_to authenticated_root_path(subject: subject.slug), class: "flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer" do %>
-            <div class="w-16 h-16 rounded-2xl border flex items-center justify-center transition-colors" style="background-color: <%= "#{subject.accent_color}1F" %>; border-color: <%= "#{subject.accent_color}4D" %>; color: <%= subject.accent_color %>;">
+          <%= link_to authenticated_root_path(subject: subject.slug), class: "w-20 flex flex-col items-center gap-2 cursor-pointer group" do %>
+            <div class="w-16 h-16 rounded-2xl border flex items-center justify-center transition-transform group-hover:scale-110" style="background-color: <%= "#{subject.accent_color}1F" %>; border-color: <%= "#{subject.accent_color}4D" %>; color: <%= subject.accent_color %>;">
               <i class="fas <%= subject.icon %> text-xl"></i>
             </div>
             <span class="text-xs text-gray-400"><%= subject.name %></span>
@@ -79,8 +79,8 @@
       </div>
     </div>
 
-    <div class="hidden lg:block lg:col-span-3 space-y-6">
-      <div class="glass rounded-2xl p-6 sticky top-24">
+    <div class="hidden lg:block lg:col-span-3 space-y-6 sticky top-24">
+      <div class="glass rounded-2xl p-6">
         <h3 class="font-semibold mb-4 text-gray-300">Tendances du jour</h3>
         <div class="space-y-4">
           <% @trending_subjects.each do |subject| %>
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div class="glass rounded-2xl p-6 sticky top-64">
+      <div class="glass rounded-2xl p-6">
         <h3 class="font-semibold mb-4 text-gray-300">Vos statistiques</h3>
         <div class="grid grid-cols-2 gap-4">
           <div class="text-center p-4 bg-white/5 rounded-xl">
