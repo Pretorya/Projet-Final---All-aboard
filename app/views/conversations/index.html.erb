@@ -23,7 +23,7 @@
     <% if @conversation.present? %>
       <% peer = @conversation.other_participant(current_user) %>
       <div class="<%= params[:id].present? ? "flex" : "hidden md:flex" %> flex-1 flex-col bg-black/20">
-        <%= turbo_stream_from @conversation %>
+        <%= turbo_stream_from [@conversation, current_user] %>
 
         <div class="p-4 border-b border-white/10 flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -35,11 +35,6 @@
               <h4 class="font-semibold"><%= peer.display_name %></h4>
               <p class="text-xs <%= conversation_online?(peer) ? "text-green-400" : "text-gray-500" %>"><%= conversation_online?(peer) ? "En ligne" : "Hors ligne" %></p>
             </div>
-          </div>
-          <div class="hidden md:flex items-center gap-3 text-gray-400">
-            <button class="hover:text-white p-2"><i class="fas fa-phone"></i></button>
-            <button class="hover:text-white p-2"><i class="fas fa-video"></i></button>
-            <button class="hover:text-white p-2"><i class="fas fa-info-circle"></i></button>
           </div>
         </div>
 
