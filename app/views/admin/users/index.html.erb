@@ -6,6 +6,9 @@
       <h1 class="text-3xl font-bold mb-2">Utilisateurs</h1>
       <p class="text-gray-400">Total: <%= @users.count %> utilisateurs</p>
     </div>
+    <%= link_to new_admin_admin_path, class: "px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium transition-colors" do %>
+      <i class="fas fa-crown mr-2"></i>Créer un administrateur
+    <% end %>
   </div>
 
   <%= link_to admin_dashboard_path, class: "text-primary hover:underline text-sm inline-block mb-4" do %>

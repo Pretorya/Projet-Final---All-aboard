@@ -35,7 +35,7 @@
         <%= link_to admin_users_path, class: "p-4 bg-primary/20 hover:bg-primary/30 rounded-lg transition-colors text-primary font-medium" do %>
           <i class="fas fa-users mr-2"></i>Voir les utilisateurs
         <% end %>
-        <%= link_to admin_send_message_form_path, class: "p-4 bg-primary/20 hover:bg-primary/30 rounded-lg transition-colors text-primary font-medium" do %>
+        <%= link_to new_admin_message_path, class: "p-4 bg-primary/20 hover:bg-primary/30 rounded-lg transition-colors text-primary font-medium" do %>
           <i class="fas fa-envelope mr-2"></i>Envoyer un message
         <% end %>
         <%= link_to admin_subject_requests_path, class: "p-4 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg transition-colors text-yellow-400 font-medium" do %>
@@ -44,7 +44,7 @@
             <span class="ml-1 bg-yellow-400 text-black text-xs rounded-full px-2 py-0.5"><%= @pending_subject_requests %></span>
           <% end %>
         <% end %>
-        <%= link_to admin_create_admin_form_path, class: "p-4 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg transition-colors text-yellow-400 font-medium" do %>
+        <%= link_to new_admin_admin_path, class: "p-4 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg transition-colors text-yellow-400 font-medium" do %>
           <i class="fas fa-crown mr-2"></i>Créer un administrateur
         <% end %>
       </div>
@@ -61,7 +61,7 @@
                 <p class="text-xs text-gray-400 mt-1">Par <strong><%= post.user.display_name %></strong></p>
                 <p class="text-xs text-gray-500 mt-1"><%= time_ago_in_words(post.created_at) %></p>
               </div>
-              <%= button_to admin_delete_post_path(post), method: :post, data: { turbo_confirm: "Êtes-vous sûr ?" }, class: "px-3 py-1 text-red-400 text-xs rounded hover:bg-red-500/10 transition-colors" do %>
+              <%= button_to admin_post_path(post), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" }, class: "px-3 py-1 text-red-400 text-xs rounded hover:bg-red-500/10 transition-colors" do %>
                 <i class="fas fa-trash"></i>
               <% end %>
             </div>

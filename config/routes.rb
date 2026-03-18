@@ -48,38 +48,21 @@ Rails.application.routes.draw do
       end
     end
 
-    # Admin routes
     namespace :admin do
-      root action: 'dashboard'
-
-      resources :posts, only: :index do
-        member do
-          post :delete, as: :delete_post
-        end
-      end
-
-      resources :users, only: :index do
-        member do
-          post :promote, as: :promote_user
-        end
-      end
-
-      resources :subject_requests, only: :index do
-        member do
-          post :update, as: :update_subject_request
-        end
-      end
-
-      get "send-message", to: "admin#send_message_form", as: :send_message_form
-      post "send-message", to: "admin#send_message_to_user", as: :send_message_to_user
-      get "create-admin", to: "admin#create_admin_form", as: :create_admin_form
-      post "create-admin", to: "admin#create_admin", as: :create_admin
+      get "dashboard", to: "dashboard#index"
+      resources :posts,            only: [:index, :destroy]
+      resources :users,            only: :index
+      resources :messages,         only: [:new, :create]
+      resources :admins,           only: [:new, :create]
+      resources :subject_requests, only: [:index, :update]
     end
   end
 
   unauthenticated do
     root "home#index"
   end
+
+  resource :admin_setup, only: [:new, :create], path: "admin-setup"
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

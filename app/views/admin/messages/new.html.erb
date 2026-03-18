@@ -10,7 +10,7 @@
   </div>
 
   <div class="glass rounded-2xl p-8">
-    <%= form_with url: admin_send_message_to_user_path, method: :post, local: true do |f| %>
+    <%= form_with url: admin_messages_path, method: :post, local: true do |f| %>
       <div class="mb-6">
         <%= f.label :user_id, "Destinataire *", class: "block text-sm font-medium mb-2 text-gray-300" %>
         <%= f.select :user_id, options_from_collection_for_select(@users, :id, :display_name), { prompt: "Sélectionner un utilisateur" }, class: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-white" %>
