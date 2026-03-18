@@ -4,7 +4,9 @@ class Message < ApplicationRecord
   belongs_to :conversation, touch: true
   belongs_to :user
 
-  validates :body, presence: true
+  has_one_attached :attachment
+
+  validates :body, presence: true, unless: -> { attachment.attached? }
 
   after_create_commit :broadcast_to_conversation
 

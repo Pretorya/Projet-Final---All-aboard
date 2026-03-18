@@ -45,6 +45,7 @@ class ApplicationController < ActionController::Base
 
     @subjects = Subject.ordered
     @new_post = current_user.posts.build(education_level: current_user.education_level)
+    @new_subject_request = current_user.subject_requests.build
     @conversation_count = current_user.unread_messages_count
   end
 end

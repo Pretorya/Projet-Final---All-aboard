@@ -1,4 +1,6 @@
 class Post < ApplicationRecord
+  include ProfanityFilter
+
   attr_accessor :tag_list
 
   belongs_to :user
@@ -32,4 +34,8 @@ class Post < ApplicationRecord
       end
     end
   end
+
+  private
+
+  def profanity_fields = %i[title body]
 end
