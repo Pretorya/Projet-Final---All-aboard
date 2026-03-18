@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     post "admin/send-message" => "admin#send_message_to_user", as: :admin_send_message_to_user
     get "admin/create-admin" => "admin#create_admin_form", as: :admin_create_admin_form
     post "admin/create-admin" => "admin#create_admin", as: :admin_create_admin
+    get "admin/subject-requests" => "admin#subject_requests", as: :admin_subject_requests
+    patch "admin/subject-requests/:id" => "admin#update_subject_request", as: :admin_update_subject_request
   end
 
   unauthenticated do

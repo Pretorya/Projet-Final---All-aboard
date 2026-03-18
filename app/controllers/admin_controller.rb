@@ -4,8 +4,24 @@ class AdminController < ApplicationController
   def dashboard
     @total_posts = Post.count
     @total_users = User.count
-    @total_reports = 0
+    @pending_subject_requests = SubjectRequest.where(status: "pending").count
     @recent_posts = Post.recent_first.limit(10)
+  end
+
+  def subject_requests
+    @pending = SubjectRequest.where(status: "pending").ordered.includes(:user)
+    @approved = SubjectRequest.where(status: "approved").ordered.includes(:user)
+    @rejected = SubjectRequest.where(status: "rejected").ordered.includes(:user)
+  end
+
+  def update_subject_request
+    @subject_request = SubjectRequest.find(params[:id])
+    new_status = params[:status]
+    if %w[approved rejected pending].include?(new_status) && @subject_request.update(status: new_status)
+      redirect_to admin_subject_requests_path, notice: "Demande mise à jour."
+    else
+      redirect_to admin_subject_requests_path, alert: "Erreur lors de la mise à jour."
+    end
   end
 
   def posts
