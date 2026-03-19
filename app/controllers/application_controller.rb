@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :load_shared_navigation
+  before_action :require_cgu_acceptance!, if: :user_signed_in?
 
   helper_method :active_section
 
@@ -35,7 +36,7 @@ class ApplicationController < ActionController::Base
   private
 
   def configure_permitted_parameters
-    extra_keys = [ :full_name, :headline, :education_level, :bio, :avatar_url ]
+    extra_keys = [ :full_name, :headline, :education_level, :bio, :avatar_url, :cgu_accepted_at ]
     devise_parameter_sanitizer.permit(:sign_up, keys: extra_keys)
     devise_parameter_sanitizer.permit(:account_update, keys: extra_keys)
   end
@@ -47,5 +48,13 @@ class ApplicationController < ActionController::Base
     @new_post = current_user.posts.build(education_level: current_user.education_level)
     @new_subject_request = current_user.subject_requests.build
     @conversation_count = current_user.unread_messages_count
+  end
+
+  def require_cgu_acceptance!
+    return if current_user.cgu_accepted_at.present?
+    return if devise_controller?
+    return if controller_name == "legal"
+
+    @requires_cgu_acceptance = true
   end
 end

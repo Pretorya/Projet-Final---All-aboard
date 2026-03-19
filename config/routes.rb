@@ -11,31 +11,31 @@ Rails.application.routes.draw do
 
     resources :posts, only: :create do
       member do
-        post :delete, as: :delete_post
+        post :delete
       end
     end
 
     resources :comments, only: :create do
       member do
-        post :delete, as: :delete_comment
+        post :delete
       end
     end
 
     resources :likes, only: :create do
       member do
-        post :delete, as: :delete_like
+        post :delete
       end
     end
 
     resources :bookmarks, only: :create do
       member do
-        post :delete, as: :delete_bookmark
+        post :delete
       end
     end
 
     resources :subject_requests, only: :create do
       member do
-        post :delete, as: :delete_subject_request
+        post :delete
         post :update
       end
     end
@@ -43,43 +43,31 @@ Rails.application.routes.draw do
     resources :conversations, path: "messages", only: [:index, :show, :create] do
       resources :messages, only: :create do
         member do
-          post :delete, as: :delete_message
+          post :delete
         end
       end
     end
 
-    # Admin routes
     namespace :admin do
-      root action: 'dashboard'
-
-      resources :posts, only: :index do
-        member do
-          post :delete, as: :delete_post
-        end
-      end
-
-      resources :users, only: :index do
-        member do
-          post :promote, as: :promote_user
-        end
-      end
-
-      resources :subject_requests, only: :index do
-        member do
-          post :update, as: :update_subject_request
-        end
-      end
-
-      get "send-message", to: "admin#send_message_form", as: :send_message_form
-      post "send-message", to: "admin#send_message_to_user", as: :send_message_to_user
-      get "create-admin", to: "admin#create_admin_form", as: :create_admin_form
-      post "create-admin", to: "admin#create_admin", as: :create_admin
+      get "dashboard", to: "dashboard#index"
+      resources :posts,            only: [:index, :destroy]
+      resources :users,            only: :index
+      resources :messages,         only: [:new, :create]
+      resources :admins,           only: [:new, :create]
+      resources :subject_requests, only: [:index, :update]
     end
   end
 
   unauthenticated do
     root "home#index"
   end
+
+  resource :admin_setup, only: [:new, :create], path: "admin-setup"
+
+  get  "legal/cgu",      to: "legal#cgu",        as: :legal_cgu
+  get  "legal/privacy",  to: "legal#privacy",     as: :legal_privacy
+  get  "legal/mentions", to: "legal#mentions",    as: :legal_mentions
+  post "legal/accept",   to: "legal#accept_cgu",  as: :accept_cgu
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
