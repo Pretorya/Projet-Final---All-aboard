@@ -11,31 +11,31 @@ Rails.application.routes.draw do
 
     resources :posts, only: :create do
       member do
-        post :delete, as: :delete_post
+        post :delete
       end
     end
 
     resources :comments, only: :create do
       member do
-        post :delete, as: :delete_comment
+        post :delete
       end
     end
 
     resources :likes, only: :create do
       member do
-        post :delete, as: :delete_like
+        post :delete
       end
     end
 
     resources :bookmarks, only: :create do
       member do
-        post :delete, as: :delete_bookmark
+        post :delete
       end
     end
 
     resources :subject_requests, only: :create do
       member do
-        post :delete, as: :delete_subject_request
+        post :delete
         post :update
       end
     end
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     resources :conversations, path: "messages", only: [:index, :show, :create] do
       resources :messages, only: :create do
         member do
-          post :delete, as: :delete_message
+          post :delete
         end
       end
     end
