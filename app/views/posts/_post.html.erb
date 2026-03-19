@@ -6,16 +6,18 @@
     <div class="p-6">
       <div class="flex justify-between items-start mb-4">
         <div class="flex items-center gap-3">
-          <img src="<%= post.user.profile_avatar %>" alt="<%= post.user.display_name %>" class="w-12 h-12 rounded-full border-2 border-primary/30">
+          <%= link_to user_path(post.user), class: "inline-flex items-center gap-3", data: { turbo_frame: "_top" } do %>
+            <img src="<%= post.user.profile_avatar %>" alt="<%= post.user.display_name %>" class="w-12 h-12 rounded-full border-2 border-primary/30">
+          <% end %>
           <div>
-            <h4 class="font-semibold"><%= post.user.display_name %></h4>
+            <h4 class="font-semibold"><%= link_to post.user.display_name, user_path(post.user), class: "text-white hover:text-primary transition-colors", data: { turbo_frame: "_top" } %></h4>
             <p class="text-xs text-gray-500"><%= relative_time(post.created_at) %> • <%= post.education_level.presence || post.user.education_level.presence || "Étudiant" %></p>
           </div>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-xs text-gray-500"><%= post.subject.name %></span>
           <% if current_user.admin? %>
-            <%= button_to post_path(post), method: :delete, data: { turbo_confirm: "Êtes-vous sûr ?" }, class: "text-red-400 hover:text-red-300 transition-colors text-xs", form_class: "inline-block" do %>
+            <%= button_to delete_post_path(post), method: :post, data: { turbo_confirm: "Êtes-vous sûr ?" }, class: "text-red-400 hover:text-red-300 transition-colors text-xs", form_class: "inline-block" do %>
               <i class="fas fa-trash"></i>
             <% end %>
           <% end %>
@@ -46,7 +48,7 @@
       <div class="flex items-center justify-between pt-4 border-t border-white/10">
         <div class="flex items-center gap-4 sm:gap-6">
           <% if current_like %>
-            <%= button_to like_path(current_like), method: :delete, class: "flex items-center gap-2 text-pink-500 transition-colors group", form_class: "inline-block" do %>
+            <%= button_to delete_like_path(current_like), method: :post, class: "flex items-center gap-2 text-pink-500 transition-colors group", form_class: "inline-block" do %>
               <i class="fas fa-heart text-xl scale-110"></i>
               <span class="text-sm"><%= post.likes_count %></span>
             <% end %>
@@ -63,7 +65,7 @@
           </span>
 
           <% if current_bookmark %>
-            <%= button_to bookmark_path(current_bookmark), method: :delete, class: "flex items-center gap-2 text-blue-400 transition-colors", form_class: "inline-block" do %>
+            <%= button_to delete_bookmark_path(current_bookmark), method: :post, class: "flex items-center gap-2 text-blue-400 transition-colors", form_class: "inline-block" do %>
               <i class="fas fa-bookmark text-xl"></i>
             <% end %>
           <% else %>
@@ -86,7 +88,7 @@
         <div class="flex gap-3">
           <img src="<%= comment.user.profile_avatar %>" alt="<%= comment.user.display_name %>" class="w-8 h-8 rounded-full">
           <div class="flex-1">
-            <p class="text-sm"><span class="font-semibold"><%= comment.user.display_name %></span> <span class="text-gray-500 text-xs">• <%= relative_time(comment.created_at) %></span></p>
+            <p class="text-sm"><span class="font-semibold"><%= link_to comment.user.display_name, user_path(comment.user), class: "hover:text-primary transition-colors" %></span> <span class="text-gray-500 text-xs">• <%= relative_time(comment.created_at) %></span></p>
             <p class="text-sm text-gray-300 mt-1"><%= comment.body %></p>
           </div>
         </div>

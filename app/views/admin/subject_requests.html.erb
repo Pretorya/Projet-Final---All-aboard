@@ -31,10 +31,10 @@
               </p>
             </div>
             <div class="flex gap-2 shrink-0">
-              <%= button_to admin_update_subject_request_path(req), method: :patch, params: { status: "approved" }, data: { turbo_confirm: "Approuver cette demande ?" }, class: "px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors text-sm font-medium" do %>
+              <%= button_to admin_update_subject_request_path(req), method: :post, params: { status: "approved" }, data: { turbo_confirm: "Approuver cette demande ?" }, class: "px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors text-sm font-medium" do %>
                 <i class="fas fa-check mr-1"></i>Approuver
               <% end %>
-              <%= button_to admin_update_subject_request_path(req), method: :patch, params: { status: "rejected" }, data: { turbo_confirm: "Rejeter cette demande ?" }, class: "px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors text-sm font-medium" do %>
+              <%= button_to admin_update_subject_request_path(req), method: :post, params: { status: "rejected" }, data: { turbo_confirm: "Rejeter cette demande ?" }, class: "px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors text-sm font-medium" do %>
                 <i class="fas fa-times mr-1"></i>Rejeter
               <% end %>
             </div>
@@ -68,7 +68,7 @@
                 Par <strong><%= req.user.display_name %></strong> · <%= time_ago_in_words(req.created_at) %>
               </p>
             </div>
-            <%= button_to admin_update_subject_request_path(req), method: :patch, params: { status: "pending" }, class: "px-3 py-1 bg-white/10 hover:bg-white/20 text-gray-400 rounded-lg transition-colors text-xs shrink-0" do %>
+            <%= button_to admin_update_subject_request_path(req), method: :post, params: { status: "pending" }, class: "px-3 py-1 bg-white/10 hover:bg-white/20 text-gray-400 rounded-lg transition-colors text-xs shrink-0" do %>
               <i class="fas fa-undo mr-1"></i>Remettre en attente
             <% end %>
           </div>
@@ -96,7 +96,7 @@
                 Par <strong><%= req.user.display_name %></strong> · <%= time_ago_in_words(req.created_at) %>
               </p>
             </div>
-            <%= button_to admin_update_subject_request_path(req), method: :patch, params: { status: "pending" }, class: "px-3 py-1 bg-white/10 hover:bg-white/20 text-gray-400 rounded-lg transition-colors text-xs shrink-0" do %>
+            <%= button_to admin_update_subject_request_path(req), method: :post, params: { status: "pending" }, class: "px-3 py-1 bg-white/10 hover:bg-white/20 text-gray-400 rounded-lg transition-colors text-xs shrink-0" do %>
               <i class="fas fa-undo mr-1"></i>Remettre en attente
             <% end %>
           </div>

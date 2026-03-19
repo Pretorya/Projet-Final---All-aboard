@@ -38,6 +38,21 @@ class AdminController < ApplicationController
     @users = User.all.order(:created_at)
   end
 
+  def promote_user
+    @user = User.find(params[:id])
+    if params[:admin] == "true"
+      @user.update(role: "admin")
+      redirect_to admin_users_path, notice: "Utilisateur #{@user.display_name} promu administrateur."
+    elsif params[:admin] == "false"
+      @user.update(role: "user")
+      redirect_to admin_users_path, notice: "Utilisateur #{@user.display_name} rétrogradé utilisateur."
+    else
+      redirect_to admin_users_path, alert: "Action invalide."
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_users_path, alert: "Utilisateur non trouvé."
+  end
+
   def send_message_form
     @users = User.where.not(id: current_user.id)
   end
@@ -54,24 +69,5 @@ class AdminController < ApplicationController
     end
   end
 
-  def create_admin_form
-    @user = User.new
-  end
-
-  def create_admin
-    @user = User.new(admin_params)
-    @user.role = "admin"
-
-    if @user.save
-      redirect_to admin_users_path, notice: "Compte administrateur créé avec succès. Email: #{@user.email}"
-    else
-      render :create_admin_form, alert: @user.errors.full_messages.to_sentence
-    end
-  end
-
   private
-
-  def admin_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :full_name)
-  end
 end

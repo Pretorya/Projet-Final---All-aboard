@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
   include ActionView::RecordIdentifier
   before_action :authenticate_user!
+  before_action :set_message, only: :destroy
 
   def create
     @conversation = current_user.conversations.find(params[:conversation_id])
@@ -27,7 +28,23 @@ class MessagesController < ApplicationController
     end
   end
 
+  def destroy
+    @conversation = @message.conversation
+    @message.destroy
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove(dom_id(@message))
+      end
+      format.html { redirect_to conversation_path(@conversation) }
+    end
+  end
+
   private
+
+  def set_message
+    @message = Message.find(params[:id])
+  end
 
   def message_params
     params.require(:message).permit(:body, :attachment)
