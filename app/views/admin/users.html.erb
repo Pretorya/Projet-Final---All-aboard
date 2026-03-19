@@ -1,14 +1,11 @@
 <% content_for :title, "Admin - Utilisateurs" %>
 
 <div class="max-w-7xl mx-auto py-8 px-4">
-  <div class="mb-8 flex justify-between items-start">
+  <div class="mb-8">
     <div>
       <h1 class="text-3xl font-bold mb-2">Utilisateurs</h1>
       <p class="text-gray-400">Total: <%= @users.count %> utilisateurs</p>
     </div>
-    <%= link_to admin_create_admin_form_path, class: "px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium transition-colors" do %>
-      <i class="fas fa-crown mr-2"></i>Créer un administrateur
-    <% end %>
   </div>
 
   <%= link_to admin_dashboard_path, class: "text-primary hover:underline text-sm inline-block mb-4" do %>
@@ -25,6 +22,7 @@
           <th class="px-6 py-4 text-left font-semibold">Commentaires</th>
           <th class="px-6 py-4 text-left font-semibold">Rôle</th>
           <th class="px-6 py-4 text-left font-semibold">Créé le</th>
+          <th class="px-6 py-4 text-left font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -44,9 +42,21 @@
               </span>
             </td>
             <td class="px-6 py-4 text-gray-400"><%= time_ago_in_words(user.created_at) %></td>
+            <td class="px-6 py-4">
+              <% if user.admin? %>
+                <%= button_to promote_user_admin_user_path(user, admin: false), method: :post, class: "text-xs text-orange-400 hover:text-orange-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Rétrograder cet utilisateur ?" } do %>
+                  <i class="fas fa-shield-alt mr-1"></i>Rétrograder
+                <% end %>
+              <% else %>
+                <%= button_to promote_user_admin_user_path(user, admin: true), method: :post, class: "text-xs text-yellow-400 hover:text-yellow-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Promouvoir cet utilisateur en administrateur ?" } do %>
+                  <i class="fas fa-crown mr-1"></i>Promouvoir
+                <% end %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 </div>
+
