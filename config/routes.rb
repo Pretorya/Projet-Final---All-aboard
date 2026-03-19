@@ -64,5 +64,10 @@ Rails.application.routes.draw do
 
   resource :admin_setup, only: [:new, :create], path: "admin-setup"
 
+  get  "legal/cgu",      to: "legal#cgu",        as: :legal_cgu
+  get  "legal/privacy",  to: "legal#privacy",     as: :legal_privacy
+  get  "legal/mentions", to: "legal#mentions",    as: :legal_mentions
+  post "legal/accept",   to: "legal#accept_cgu",  as: :accept_cgu
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
