@@ -17,6 +17,10 @@
           <i class="fas fa-compass"></i>
           <span class="font-medium">Matières</span>
         <% end %>
+        <%= link_to resources_path, class: feed_nav_classes(:resources) do %>
+          <i class="fas fa-book-open"></i>
+          <span class="font-medium">Ressources</span>
+        <% end %>
         <%= link_to conversations_path, class: "#{feed_nav_classes(:messages)} relative" do %>
           <i class="fas fa-comment-dots"></i>
           <span class="font-medium">Messages</span>
@@ -43,6 +47,13 @@
             <% end %>
             <%= link_to my_posts_path, class: "block px-4 py-2 text-sm rounded-lg hover:bg-white/10" do %>
               Mes posts
+            <% end %>
+            <% if current_user.mentor? %>
+              <div class="border-t border-white/10 mt-2 pt-2">
+                <%= link_to mentor_dashboard_path, class: "block px-4 py-2 text-sm rounded-lg hover:bg-emerald-500/10 text-emerald-400 font-medium" do %>
+                  <i class="fas fa-chalkboard-teacher mr-2"></i>Espace Mentor
+                <% end %>
+              </div>
             <% end %>
             <% if current_user.admin? %>
               <div class="border-t border-white/10 mt-2 pt-2">

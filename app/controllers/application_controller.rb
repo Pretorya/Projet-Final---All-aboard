@@ -26,11 +26,17 @@ class ApplicationController < ActionController::Base
       :explore
     when "conversations", "messages"
       :messages
+    when "resources"
+      :resources
     end
   end
 
   def authenticate_admin!
     redirect_to authenticated_root_path, alert: "Accès non autorisé" unless current_user&.admin?
+  end
+
+  def authenticate_mentor!
+    redirect_to authenticated_root_path, alert: "Accès réservé aux mentors" unless current_user&.mentor?
   end
 
   private

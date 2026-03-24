@@ -1,0 +1,47 @@
+<% content_for :title, "Ressources" %>
+
+<div class="max-w-4xl mx-auto py-8 px-4">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">
+      <i class="fas fa-book-open text-emerald-400 mr-3"></i>Ressources
+    </h1>
+    <p class="text-gray-400">Guides et ressources pédagogiques partagés par les mentors StudyLink.</p>
+  </div>
+
+  <% if @resources.any? %>
+    <div class="space-y-4">
+      <% @resources.each do |resource| %>
+        <div class="glass rounded-2xl p-6 hover:bg-white/5 transition-colors">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <h2 class="text-lg font-semibold mb-1">
+                <%= link_to resource.title, resource_path(resource), class: "hover:text-emerald-400 transition-colors" %>
+              </h2>
+              <p class="text-gray-400 text-sm line-clamp-2"><%= resource.body.truncate(180) %></p>
+              <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+                <span class="flex items-center gap-1">
+                  <img src="<%= resource.user.profile_avatar %>" class="w-4 h-4 rounded-full inline-block">
+                  <span class="text-emerald-400 font-medium"><%= resource.user.display_name %></span>
+                  <i class="fas fa-chalkboard-teacher text-emerald-400/70 ml-1"></i>
+                </span>
+                <% if resource.subject %>
+                  <span class="px-2 py-1 bg-white/10 rounded-full"><%= resource.subject.name %></span>
+                <% end %>
+                <span><%= time_ago_in_words(resource.created_at) %></span>
+              </div>
+            </div>
+            <%= link_to resource_path(resource), class: "text-gray-400 hover:text-emerald-400 transition-colors shrink-0" do %>
+              <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="glass rounded-2xl p-12 text-center text-gray-400">
+      <i class="fas fa-book-open text-4xl mb-4 block text-emerald-400/50"></i>
+      <p class="font-medium mb-2">Aucune ressource disponible pour le moment.</p>
+      <p class="text-sm">Les mentors n'ont pas encore partagé de ressources.</p>
+    </div>
+  <% end %>
+</div>

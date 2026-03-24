@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_23_214842) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -126,6 +126,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "resources", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.integer "subject_id"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["subject_id"], name: "index_resources_on_subject_id"
+    t.index ["user_id"], name: "index_resources_on_user_id"
+  end
+
   create_table "subject_requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -166,6 +177,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
     t.string "encrypted_password", default: "", null: false
     t.string "full_name"
     t.string "headline"
+    t.boolean "mentor", default: false, null: false
     t.decimal "rating", precision: 2, scale: 1, default: "4.8", null: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
@@ -193,5 +205,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "subjects"
   add_foreign_key "posts", "users"
+  add_foreign_key "resources", "subjects"
+  add_foreign_key "resources", "users"
   add_foreign_key "subject_requests", "users"
 end

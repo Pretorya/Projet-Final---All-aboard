@@ -51,11 +51,22 @@ Rails.application.routes.draw do
     namespace :admin do
       get "dashboard", to: "dashboard#index"
       resources :posts,            only: [:index, :destroy]
-      resources :users,            only: :index
+      resources :users,            only: :index do
+        member do
+          post :promote_user
+          post :promote_mentor
+        end
+      end
       resources :messages,         only: [:new, :create]
       resources :admins,           only: [:new, :create]
       resources :subject_requests, only: [:index, :update]
     end
+
+    namespace :mentor do
+      get "dashboard", to: "dashboard#index", as: :dashboard
+    end
+
+    resources :resources, only: [:index, :show, :new, :create]
   end
 
   unauthenticated do
