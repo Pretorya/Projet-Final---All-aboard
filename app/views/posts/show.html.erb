@@ -42,6 +42,51 @@
               placeholder: "Écrire une réponse...",
               rows: 3,
               class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary resize-none" %>
+
+          <%# Bloc de code optionnel %>
+          <details class="group">
+            <summary class="text-xs text-gray-500 hover:text-gray-300 cursor-pointer select-none flex items-center gap-1.5 py-1 w-fit">
+              <i class="fas fa-code text-[10px]"></i>
+              Ajouter un bloc de code
+              <i class="fas fa-chevron-down text-[10px] group-open:rotate-180 transition-transform"></i>
+            </summary>
+            <div class="mt-2 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-500">Langage</span>
+                <%= form.select :code_language,
+                    [
+                      ["— Langage —",  "plaintext"],
+                      ["Python",       "python"],
+                      ["JavaScript",   "javascript"],
+                      ["TypeScript",   "typescript"],
+                      ["HTML",         "html"],
+                      ["CSS",          "css"],
+                      ["Ruby",         "ruby"],
+                      ["Java",         "java"],
+                      ["C",            "c"],
+                      ["C++",          "cpp"],
+                      ["C#",           "csharp"],
+                      ["PHP",          "php"],
+                      ["Go",           "go"],
+                      ["Rust",         "rust"],
+                      ["SQL",          "sql"],
+                      ["Bash / Shell", "bash"],
+                      ["R",            "r"],
+                      ["MATLAB",       "matlab"],
+                      ["LaTeX",        "latex"],
+                      ["JSON",         "json"],
+                      ["Texte brut",   "plaintext"],
+                    ],
+                    {},
+                    class: "bg-black/40 border border-white/10 rounded-lg px-3 py-1 text-xs text-gray-300 focus:outline-none focus:border-primary" %>
+              </div>
+              <%= form.text_area :code_snippet,
+                  rows: 5,
+                  placeholder: "Colle ton code ici...",
+                  class: "w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-primary resize-y" %>
+            </div>
+          </details>
+
           <div class="flex justify-end">
             <%= form.submit "Répondre", class: "px-5 py-2 rounded-xl bg-primary hover:bg-primary/80 text-sm font-medium transition-colors cursor-pointer" %>
           </div>

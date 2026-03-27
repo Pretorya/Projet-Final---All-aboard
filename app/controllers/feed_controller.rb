@@ -5,15 +5,26 @@ class FeedController < ApplicationController
     @selected_subject = Subject.find_by(slug: params[:subject])
     @selected_tag = Tag.find_by(slug: params[:tag])
 
+    @search_query = params[:q].to_s.strip
+
     @posts = Post.includes(:user, :subject, :tags, comments: :user, likes: :user, bookmarks: :user).recent_first
     @posts = @posts.where(subject: @selected_subject) if @selected_subject.present?
     @posts = @posts.joins(:tags).where(tags: { id: @selected_tag.id }).distinct if @selected_tag.present?
 
+    if @search_query.present?
+      q = "%#{ActiveRecord::Base.sanitize_sql_like(@search_query)}%"
+      matching_ids = Post.joins(:subject)
+                         .left_joins(:tags)
+                         .where(
+                           "posts.title LIKE :q OR posts.body LIKE :q OR subjects.name LIKE :q OR tags.name LIKE :q",
+                           q: q
+                         )
+                         .distinct
+                         .pluck(:id)
+      @posts = @posts.where(id: matching_ids)
+    end
+
     @quick_tags = Tag.joins(:posts).distinct.ordered.limit(5)
-    @trending_subjects = Subject.left_joins(:posts)
-                                .group(:id)
-                                .order(Arel.sql("COUNT(posts.id) DESC"))
-                                .limit(3)
     @top_contributors = User.includes(:comments, :messages).to_a
                             .sort_by { |user| [ -user.contribution_count, -user.rating.to_f ] }
                             .first(3)

@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     extra_keys = [ :full_name, :headline, :education_level, :bio, :avatar_url, :cgu_accepted_at ]
     devise_parameter_sanitizer.permit(:sign_up, keys: extra_keys)
-    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys + [ :notify_on_message, :notify_on_comment, :avatar_image ])
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys + [ :notify_on_message, :notify_on_comment, :avatar_image, competence_ids: [] ])
   end
 
   def load_shared_navigation

@@ -23,12 +23,45 @@
         </div>
 
         <div>
-          <%= form.label :code_snippet, "Extrait / formule", class: "block text-sm font-medium mb-2 text-gray-300" %>
-          <%= form.text_area :code_snippet, rows: 3, placeholder: "Optionnel: ajoutez une formule, un extrait de code ou un passage à analyser...", class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary resize-none font-mono text-sm" %>
+          <div class="flex items-center justify-between mb-2">
+            <%= form.label :code_snippet, "Bloc de code", class: "text-sm font-medium text-gray-300" %>
+            <%= form.select :code_language,
+                [
+                  ["— Langage —",      "plaintext"],
+                  ["Python",           "python"],
+                  ["JavaScript",       "javascript"],
+                  ["TypeScript",       "typescript"],
+                  ["HTML",             "html"],
+                  ["CSS",              "css"],
+                  ["Ruby",             "ruby"],
+                  ["Java",             "java"],
+                  ["C",                "c"],
+                  ["C++",              "cpp"],
+                  ["C#",               "csharp"],
+                  ["PHP",              "php"],
+                  ["Go",               "go"],
+                  ["Rust",             "rust"],
+                  ["SQL",              "sql"],
+                  ["Bash / Shell",     "bash"],
+                  ["R",                "r"],
+                  ["MATLAB",           "matlab"],
+                  ["LaTeX",            "latex"],
+                  ["JSON",             "json"],
+                  ["Texte brut",       "plaintext"],
+                ],
+                {},
+                class: "bg-black/40 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-primary" %>
+          </div>
+          <%= form.text_area :code_snippet, rows: 3,
+              placeholder: "Optionnel — colle ton code ici...",
+              class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary resize-none font-mono text-sm" %>
         </div>
 
         <div>
-          <span class="block text-sm font-medium mb-2 text-gray-300">Matière</span>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-sm font-medium text-gray-300">Tag principal</span>
+            <span class="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">1 seul</span>
+          </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <%= form.collection_radio_buttons :subject_id, @subjects, :id, :name do |builder| %>
               <label class="block cursor-pointer">
@@ -42,8 +75,11 @@
         </div>
 
         <div>
-          <%= form.label :tag_list, "Tags", class: "block text-sm font-medium mb-2 text-gray-300" %>
-          <%= form.text_field :tag_list, placeholder: "Ajoutez des tags séparés par des virgules...", class: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm" %>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-sm font-medium text-gray-300">Sous-tags</span>
+            <span class="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">optionnel · max 6</span>
+          </div>
+          <%= form.text_field :tag_list, placeholder: "Ex : intégrales, limite, convergence — séparés par des virgules", class: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm" %>
         </div>
 
         <div class="flex items-center gap-2 p-3 bg-orange-500/10 border border-orange-500/20 rounded-xl">

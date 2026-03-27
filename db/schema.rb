@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_27_000007) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
 
   create_table "comments", force: :cascade do |t|
     t.text "body", null: false
+    t.string "code_language", default: "plaintext"
+    t.text "code_snippet"
     t.datetime "created_at", null: false
     t.integer "post_id", null: false
     t.datetime "updated_at", null: false
@@ -127,6 +129,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "mentor_subjects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["subject_id"], name: "index_mentor_subjects_on_subject_id"
+    t.index ["user_id", "subject_id"], name: "index_mentor_subjects_on_user_id_and_subject_id", unique: true
+    t.index ["user_id"], name: "index_mentor_subjects_on_user_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.text "body", null: false
     t.integer "conversation_id", null: false
@@ -150,6 +162,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
   create_table "posts", force: :cascade do |t|
     t.text "body", null: false
     t.integer "bookmarks_count", default: 0, null: false
+    t.string "code_language", default: "plaintext"
     t.text "code_snippet"
     t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
@@ -165,9 +178,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "resource_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "resource_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_id", "tag_id"], name: "index_resource_tags_on_resource_id_and_tag_id", unique: true
+    t.index ["resource_id"], name: "index_resource_tags_on_resource_id"
+    t.index ["tag_id"], name: "index_resource_tags_on_tag_id"
+  end
+
   create_table "resources", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
+    t.integer "status", default: 0, null: false
     t.integer "subject_id"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -245,12 +269,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
   add_foreign_key "conversation_participants", "users"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
+  add_foreign_key "mentor_subjects", "subjects"
+  add_foreign_key "mentor_subjects", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "subjects"
   add_foreign_key "posts", "users"
+  add_foreign_key "resource_tags", "resources"
+  add_foreign_key "resource_tags", "tags"
   add_foreign_key "resources", "subjects"
   add_foreign_key "resources", "users"
   add_foreign_key "subject_requests", "users"

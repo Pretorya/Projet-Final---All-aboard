@@ -6,7 +6,7 @@
     <p class="text-gray-400">Gérez l'application et les utilisateurs</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
     <div class="glass rounded-2xl p-6 text-center">
       <p class="text-4xl font-bold text-primary"><%= @total_posts %></p>
       <p class="text-sm text-gray-400 mt-2">Posts publiés</p>
@@ -17,11 +17,11 @@
     </div>
     <div class="glass rounded-2xl p-6 text-center">
       <p class="text-4xl font-bold text-yellow-400"><%= @pending_subject_requests %></p>
-      <p class="text-sm text-gray-400 mt-2">Demandes en attente</p>
+      <p class="text-sm text-gray-400 mt-2">Demandes matières</p>
     </div>
     <div class="glass rounded-2xl p-6 text-center">
-      <p class="text-4xl font-bold text-green-400"><%= current_user.admin? ? '✓' : '✗' %></p>
-      <p class="text-sm text-gray-400 mt-2">Status Admin</p>
+      <p class="text-4xl font-bold text-emerald-400"><%= @pending_resources %></p>
+      <p class="text-sm text-gray-400 mt-2">Ressources en attente</p>
     </div>
   </div>
 
@@ -46,6 +46,12 @@
         <% end %>
         <%= link_to new_admin_admin_path, class: "p-4 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg transition-colors text-yellow-400 font-medium" do %>
           <i class="fas fa-crown mr-2"></i>Créer un administrateur
+        <% end %>
+        <%= link_to admin_resources_path, class: "p-4 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-lg transition-colors text-emerald-400 font-medium" do %>
+          <i class="fas fa-book-open mr-2"></i>Ressources à valider
+          <% if @pending_resources > 0 %>
+            <span class="ml-1 bg-emerald-500 text-white text-xs rounded-full px-2 py-0.5"><%= @pending_resources %></span>
+          <% end %>
         <% end %>
         <%= link_to admin_event_candidates_path, class: "p-4 bg-accent/20 hover:bg-accent/30 rounded-lg transition-colors text-accent font-medium" do %>
           <i class="fas fa-calendar-alt mr-2"></i>Événements
