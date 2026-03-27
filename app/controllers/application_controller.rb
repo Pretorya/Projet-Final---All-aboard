@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
       :explore
     when "conversations", "messages"
       :messages
+    when "resources"
+      :resources
+    when "events"
+      :events
     end
   end
 
@@ -33,12 +37,16 @@ class ApplicationController < ActionController::Base
     redirect_to authenticated_root_path, alert: "Accès non autorisé" unless current_user&.admin?
   end
 
+  def authenticate_mentor!
+    redirect_to authenticated_root_path, alert: "Accès réservé aux mentors" unless current_user&.mentor?
+  end
+
   private
 
   def configure_permitted_parameters
     extra_keys = [ :full_name, :headline, :education_level, :bio, :avatar_url, :cgu_accepted_at ]
     devise_parameter_sanitizer.permit(:sign_up, keys: extra_keys)
-    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys + [ :notify_on_message, :notify_on_comment, :avatar_image ])
   end
 
   def load_shared_navigation

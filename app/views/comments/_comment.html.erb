@@ -1,0 +1,20 @@
+<div id="<%= dom_id(comment) %>" class="flex gap-3">
+  <img src="<%= comment.user.profile_avatar %>" alt="<%= comment.user.display_name %>" class="w-9 h-9 rounded-full flex-shrink-0">
+  <div class="flex-1">
+    <div class="flex items-baseline justify-between gap-2">
+      <p class="text-sm">
+        <span class="font-semibold"><%= link_to comment.user.display_name, user_path(comment.user), class: "hover:text-primary transition-colors" %></span>
+        <span class="text-gray-500 text-xs ml-2"><%= relative_time(comment.created_at) %></span>
+      </p>
+      <% if comment.user == current_user || current_user.admin? %>
+        <%= button_to delete_comment_path(comment), method: :post,
+                      class: "text-gray-600 hover:text-red-400 transition-colors text-xs",
+                      data: { turbo_confirm: "Supprimer ce commentaire ?" },
+                      form_class: "inline-block" do %>
+          <i class="fas fa-trash"></i>
+        <% end %>
+      <% end %>
+    </div>
+    <p class="text-sm text-gray-300 mt-1"><%= comment.body %></p>
+  </div>
+</div>

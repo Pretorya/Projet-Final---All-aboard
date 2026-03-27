@@ -1,17 +1,19 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { confirmations: "users/confirmations", registrations: "users/registrations" }
 
   authenticated :user do
     root "feed#index", as: :authenticated_root
     get "feed" => "feed#index"
     get "explore" => "explore#index"
     get "my-posts" => "my_posts#index"
+    get "my-bookmarks" => "my_bookmarks#index", as: :my_bookmarks
 
     resources :users, only: :show
 
-    resources :posts, only: :create do
+    resources :posts, only: [:create, :show] do
       member do
         post :delete
+        post :track_view
       end
     end
 
@@ -48,13 +50,37 @@ Rails.application.routes.draw do
       end
     end
 
+    # Ressources mentor
+    resources :resources, only: [:index, :show, :new, :create]
+
+    # Événements (publics)
+    resources :events, only: [:index, :show]
+
+    # Espace mentor
+    namespace :mentor do
+      get "dashboard", to: "dashboard#index", as: :dashboard
+    end
+
     namespace :admin do
       get "dashboard", to: "dashboard#index"
       resources :posts,            only: [:index, :destroy]
-      resources :users,            only: :index
+      resources :users,            only: :index do
+        member do
+          post :promote_user
+          post :promote_mentor
+        end
+      end
       resources :messages,         only: [:new, :create]
       resources :admins,           only: [:new, :create]
       resources :subject_requests, only: [:index, :update]
+      resources :event_candidates, only: [:index] do
+        collection { post :fetch }
+        member do
+          post :approve
+          post :reject
+        end
+      end
+      resources :events, only: [:new, :create, :destroy]
     end
   end
 

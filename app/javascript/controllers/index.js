@@ -15,3 +15,6 @@ application.register("message-form", MessageFormController)
 
 import ConversationMessagesController from "./conversation_messages_controller"
 application.register("conversation-messages", ConversationMessagesController)
+
+import TrackViewController from "./track_view_controller"
+application.register("track-view", TrackViewController)

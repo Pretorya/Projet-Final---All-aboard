@@ -10,6 +10,11 @@ class MessagesController < ApplicationController
     if @message.save
       @conversation.mark_read_for!(current_user)
 
+      recipient = @conversation.other_participant(current_user)
+      if recipient&.notify_on_message?
+        NotificationMailer.new_message(recipient, @message).deliver_later
+      end
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.append(

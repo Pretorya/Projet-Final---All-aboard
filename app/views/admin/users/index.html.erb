@@ -43,16 +43,30 @@
                 <i class="<%= user.admin? ? 'fas fa-crown' : 'fas fa-user' %>"></i>
                 <%= user.role.titleize %>
               </span>
+              <% if user.mentor? %>
+                <span class="ml-2 text-emerald-400 text-xs font-semibold">
+                  <i class="fas fa-chalkboard-teacher"></i> Mentor
+                </span>
+              <% end %>
             </td>
             <td class="px-6 py-4 text-gray-400"><%= time_ago_in_words(user.created_at) %></td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 flex flex-col gap-1">
               <% if user.admin? %>
                 <%= button_to promote_user_admin_user_path(user, admin: false), method: :post, class: "text-xs text-orange-400 hover:text-orange-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Rétrograder cet utilisateur ?" } do %>
-                  <i class="fas fa-shield-alt mr-1"></i>Rétrograder
+                  <i class="fas fa-shield-alt mr-1"></i>Rétrograder admin
                 <% end %>
               <% else %>
                 <%= button_to promote_user_admin_user_path(user, admin: true), method: :post, class: "text-xs text-yellow-400 hover:text-yellow-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Promouvoir cet utilisateur en administrateur ?" } do %>
-                  <i class="fas fa-crown mr-1"></i>Promouvoir
+                  <i class="fas fa-crown mr-1"></i>Promouvoir admin
+                <% end %>
+              <% end %>
+              <% if user.mentor? %>
+                <%= button_to promote_mentor_admin_user_path(user), method: :post, class: "text-xs text-red-400 hover:text-red-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Retirer le statut mentor ?" } do %>
+                  <i class="fas fa-chalkboard-teacher mr-1"></i>Retirer mentor
+                <% end %>
+              <% else %>
+                <%= button_to promote_mentor_admin_user_path(user), method: :post, class: "text-xs text-emerald-400 hover:text-emerald-300 transition-colors", form_class: "inline-block", data: { turbo_confirm: "Nommer cet utilisateur mentor ?" } do %>
+                  <i class="fas fa-chalkboard-teacher mr-1"></i>Nommer mentor
                 <% end %>
               <% end %>
             </td>

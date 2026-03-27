@@ -17,5 +17,12 @@ class FeedController < ApplicationController
     @top_contributors = User.includes(:comments, :messages).to_a
                             .sort_by { |user| [ -user.contribution_count, -user.rating.to_f ] }
                             .first(3)
+
+    recently_viewed_ids = (session[:recently_viewed_post_ids] || []).map(&:to_i)
+    @recently_viewed = Post.includes(:user, :subject)
+                           .where(id: recently_viewed_ids)
+                           .index_by(&:id)
+                           .values_at(*recently_viewed_ids)
+                           .compact
   end
 end

@@ -14,6 +14,8 @@ class LikesController < ApplicationController
     replace_post(post)
   end
 
+  alias_method :delete, :destroy
+
   private
 
   def replace_post(post)

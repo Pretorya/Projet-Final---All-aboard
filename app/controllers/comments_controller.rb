@@ -7,11 +7,22 @@ class CommentsController < ApplicationController
     @comment = @post.comments.build(body: comment_params[:body], user: current_user)
 
     if @comment.save
-      render turbo_stream: turbo_stream.replace(
-        view_context.dom_id(@post, :card),
-        partial: "posts/post",
-        locals: { post: @post.reload }
-      )
+      if @post.user != current_user && @post.user.notify_on_comment?
+        NotificationMailer.new_comment(@post.user, @comment).deliver_later
+      end
+
+      render turbo_stream: [
+        turbo_stream.replace(
+          view_context.dom_id(@post, :card),
+          partial: "posts/post",
+          locals: { post: @post.reload }
+        ),
+        turbo_stream.append(
+          "post_#{@post.id}_comments",
+          partial: "comments/comment",
+          locals: { comment: @comment }
+        )
+      ]
     else
       redirect_to authenticated_root_path, alert: @comment.errors.full_messages.to_sentence
     end
@@ -19,12 +30,16 @@ class CommentsController < ApplicationController
 
   def destroy
     @post = @comment.post
+    comment_id = dom_id(@comment)
     @comment.destroy
-    render turbo_stream: turbo_stream.replace(
-      view_context.dom_id(@post, :card),
-      partial: "posts/post",
-      locals: { post: @post.reload }
-    )
+    render turbo_stream: [
+      turbo_stream.replace(
+        view_context.dom_id(@post, :card),
+        partial: "posts/post",
+        locals: { post: @post.reload }
+      ),
+      turbo_stream.remove(comment_id)
+    ]
   end
 
   private

@@ -1,3 +1,4 @@
+<% show_page = local_assigns.fetch(:show_page, false) %>
 <%= turbo_frame_tag dom_id(post, :card) do %>
   <% current_like = post.likes.find { |like| like.user_id == current_user.id } %>
   <% current_bookmark = post.bookmarks.find { |bookmark| bookmark.user_id == current_user.id } %>
@@ -24,7 +25,16 @@
         </div>
       </div>
 
-      <h3 class="text-lg font-semibold mb-2"><%= post.title %></h3>
+      <h3 class="text-lg font-semibold mb-2">
+        <%= link_to post.title, post_path(post),
+                    class: "hover:text-primary transition-colors",
+                    data: {
+                      turbo_frame: "_top",
+                      controller: "track-view",
+                      "track-view-url-value": track_view_post_path(post),
+                      action: "click->track-view#track"
+                    } %>
+      </h3>
       <p class="text-gray-300 mb-4 text-sm leading-relaxed"><%= post.body %></p>
 
       <div class="flex flex-wrap gap-2 mb-4">
@@ -83,6 +93,7 @@
       </div>
     </div>
 
+    <% unless show_page %>
     <div class="bg-white/5 p-4 border-t border-white/10 space-y-4">
       <% post.comments.last(2).each do |comment| %>
         <div class="flex gap-3">
@@ -94,6 +105,12 @@
         </div>
       <% end %>
 
+      <% if post.comments_count > 2 %>
+        <%= link_to post_path(post), class: "text-xs text-primary hover:underline", data: { turbo_frame: "_top" } do %>
+          Voir toutes les réponses (<%= post.comments_count %>)
+        <% end %>
+      <% end %>
+
       <%= form_with model: Comment.new, url: comments_path, class: "flex gap-3 items-start" do |form| %>
         <%= form.hidden_field :post_id, value: post.id %>
         <img src="<%= current_user.profile_avatar %>" alt="<%= current_user.display_name %>" class="w-8 h-8 rounded-full">
@@ -103,5 +120,6 @@
         </div>
       <% end %>
     </div>
+    <% end %>
   </article>
 <% end %>

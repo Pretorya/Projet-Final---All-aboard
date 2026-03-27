@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_27_000002) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -78,6 +78,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
     t.index ["direct_key"], name: "index_conversations_on_direct_key", unique: true
   end
 
+  create_table "event_candidates", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "event_type"
+    t.string "external_id"
+    t.string "external_url"
+    t.string "location"
+    t.boolean "online", default: false, null: false
+    t.string "organizer"
+    t.text "raw_data"
+    t.string "source", default: "eventbrite", null: false
+    t.datetime "starts_at", precision: nil
+    t.string "status", default: "pending", null: false
+    t.integer "subject_id"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source", "external_id"], name: "idx_event_candidates_source_external", unique: true
+    t.index ["status"], name: "idx_event_candidates_status"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "ends_at", precision: nil
+    t.string "event_type"
+    t.string "external_id"
+    t.string "external_url"
+    t.string "location"
+    t.boolean "online", default: false, null: false
+    t.string "organizer"
+    t.string "source", default: "eventbrite", null: false
+    t.datetime "starts_at", precision: nil
+    t.integer "subject_id"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["starts_at"], name: "idx_events_starts_at"
+    t.index ["subject_id"], name: "idx_events_subject_id"
+  end
+
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "post_id", null: false
@@ -126,6 +165,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "resources", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.integer "subject_id"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["subject_id"], name: "index_resources_on_subject_id"
+    t.index ["user_id"], name: "index_resources_on_user_id"
+  end
+
   create_table "subject_requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -160,18 +210,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
     t.string "avatar_url"
     t.text "bio"
     t.datetime "cgu_accepted_at"
+    t.datetime "confirmation_sent_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
     t.datetime "created_at", null: false
     t.string "education_level"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "full_name"
     t.string "headline"
+    t.boolean "mentor", default: false, null: false
+    t.boolean "notify_on_comment", default: true, null: false
+    t.boolean "notify_on_message", default: true, null: false
     t.decimal "rating", precision: 2, scale: 1, default: "4.8", null: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.string "role", default: "user", null: false
+    t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
@@ -193,5 +251,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_133710) do
   add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "subjects"
   add_foreign_key "posts", "users"
+  add_foreign_key "resources", "subjects"
+  add_foreign_key "resources", "users"
   add_foreign_key "subject_requests", "users"
 end
