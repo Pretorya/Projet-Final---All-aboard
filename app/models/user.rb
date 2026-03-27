@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_one_attached :avatar_image
 
   has_many :posts, dependent: :destroy
+  has_many :mentor_subjects, dependent: :destroy
+  has_many :competences, through: :mentor_subjects, source: :subject
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :bookmarks, dependent: :destroy

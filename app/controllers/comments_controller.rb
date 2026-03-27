@@ -4,7 +4,12 @@ class CommentsController < ApplicationController
 
   def create
     @post = Post.includes(:user, :subject, :tags, comments: :user, likes: :user, bookmarks: :user).find(comment_params[:post_id])
-    @comment = @post.comments.build(body: comment_params[:body], user: current_user)
+    @comment = @post.comments.build(
+      body: comment_params[:body],
+      code_snippet: comment_params[:code_snippet].presence,
+      code_language: comment_params[:code_language].presence || "plaintext",
+      user: current_user
+    )
 
     if @comment.save
       if @post.user != current_user && @post.user.notify_on_comment?
@@ -49,7 +54,7 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:post_id, :body)
+    params.require(:comment).permit(:post_id, :body, :code_snippet, :code_language)
   end
 end
 

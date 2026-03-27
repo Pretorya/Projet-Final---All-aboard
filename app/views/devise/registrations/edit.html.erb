@@ -88,6 +88,37 @@
         </div>
       </div>
 
+      <%# Mentor competences %>
+      <% if current_user.mentor? %>
+        <div class="border border-primary/20 rounded-2xl p-6 mt-2">
+          <div class="flex items-center gap-2 mb-1">
+            <i class="fas fa-chalkboard-teacher text-primary text-base"></i>
+            <h3 class="font-semibold text-white">Mes compétences</h3>
+          </div>
+          <p class="text-xs text-gray-500 mb-4">Sélectionne les matières dans lesquelles tu peux aider les étudiants.</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <% @subjects.each do |subject| %>
+              <% checked = current_user.competences.include?(subject) %>
+              <label class="block cursor-pointer">
+                <input type="checkbox"
+                       name="user[competence_ids][]"
+                       value="<%= subject.id %>"
+                       <%= "checked" if checked %>
+                       class="peer sr-only">
+                <span class="flex items-center gap-2 p-3 rounded-xl border text-sm transition-colors cursor-pointer
+                             <%= checked ? 'border-primary bg-primary/10 text-white' : 'border-white/10 bg-white/5 text-gray-400 hover:border-primary/40' %>
+                             peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-white">
+                  <i class="fas <%= subject.icon %>" style="color: <%= subject.accent_color %>;"></i>
+                  <%= subject.name %>
+                </span>
+              </label>
+            <% end %>
+          </div>
+          <%# Champ caché pour soumettre un tableau vide si rien n'est coché %>
+          <input type="hidden" name="user[competence_ids][]" value="">
+        </div>
+      <% end %>
+
       <%# Notification preferences %>
       <div class="border border-white/10 rounded-2xl p-6 mt-2">
         <div class="flex items-center gap-2 mb-4">

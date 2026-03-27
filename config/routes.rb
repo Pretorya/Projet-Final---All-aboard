@@ -59,6 +59,12 @@ Rails.application.routes.draw do
     # Espace mentor
     namespace :mentor do
       get "dashboard", to: "dashboard#index", as: :dashboard
+      resources :resources, only: [:index] do
+        member do
+          post :approve
+          post :reject
+        end
+      end
     end
 
     namespace :admin do
@@ -73,6 +79,12 @@ Rails.application.routes.draw do
       resources :messages,         only: [:new, :create]
       resources :admins,           only: [:new, :create]
       resources :subject_requests, only: [:index, :update]
+      resources :resources,        only: [:index] do
+        member do
+          post :approve
+          post :reject
+        end
+      end
       resources :event_candidates, only: [:index] do
         collection { post :fetch }
         member do
