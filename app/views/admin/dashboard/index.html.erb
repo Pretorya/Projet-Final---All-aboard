@@ -23,6 +23,10 @@
       <p class="text-4xl font-bold text-emerald-400"><%= @pending_resources %></p>
       <p class="text-sm text-gray-400 mt-2">Ressources en attente</p>
     </div>
+    <div class="glass rounded-2xl p-6 text-center col-span-2 md:col-span-1 <%= @flagged_count > 0 ? 'ring-1 ring-orange-400/40' : '' %>">
+      <p class="text-4xl font-bold <%= @flagged_count > 0 ? 'text-orange-400' : 'text-gray-500' %>"><%= @flagged_count %></p>
+      <p class="text-sm text-gray-400 mt-2">En attente de modération</p>
+    </div>
   </div>
 
   <div class="space-y-6">
@@ -57,6 +61,12 @@
           <i class="fas fa-calendar-alt mr-2"></i>Événements
           <% if @pending_event_candidates > 0 %>
             <span class="ml-1 bg-accent text-white text-xs rounded-full px-2 py-0.5"><%= @pending_event_candidates %></span>
+          <% end %>
+        <% end %>
+        <%= link_to admin_moderation_path, class: "p-4 bg-orange-500/20 hover:bg-orange-500/30 rounded-lg transition-colors text-orange-400 font-medium" do %>
+          <i class="fas fa-shield-alt mr-2"></i>Modération
+          <% if @flagged_count > 0 %>
+            <span class="ml-1 bg-orange-400 text-black text-xs rounded-full px-2 py-0.5"><%= @flagged_count %></span>
           <% end %>
         <% end %>
       </div>

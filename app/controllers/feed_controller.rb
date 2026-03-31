@@ -7,7 +7,9 @@ class FeedController < ApplicationController
 
     @search_query = params[:q].to_s.strip
 
-    @posts = Post.includes(:user, :subject, :tags, comments: :user, likes: :user, bookmarks: :user).recent_first
+    @posts = Post.includes(:user, :subject, :tags, comments: :user, likes: :user, bookmarks: :user)
+                 .where(flagged_for_moderation: false)
+                 .recent_first
     @posts = @posts.where(subject: @selected_subject) if @selected_subject.present?
     @posts = @posts.joins(:tags).where(tags: { id: @selected_tag.id }).distinct if @selected_tag.present?
 

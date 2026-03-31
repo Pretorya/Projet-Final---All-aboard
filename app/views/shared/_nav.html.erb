@@ -5,7 +5,7 @@
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
           <i class="fas fa-graduation-cap text-white text-lg"></i>
         </div>
-        <span class="text-xl font-bold gradient-text">StudyLink</span>
+        <span class="text-xl font-bold gradient-text">AllAboard</span>
       <% end %>
 
       <div class="hidden md:flex items-center gap-6">
@@ -37,6 +37,12 @@
       </div>
 
       <div class="flex items-center gap-4">
+        <div class="relative">
+        <% if current_user.mentor? && @mentor_pending_count.to_i > 0 %>
+          <span class="absolute -top-1 -right-1 min-w-5 h-5 px-1 bg-emerald-400 text-black text-[10px] font-bold rounded-full flex items-center justify-center z-10 pointer-events-none">
+            <%= @mentor_pending_count %>
+          </span>
+        <% end %>
         <details class="relative group">
           <summary class="list-none cursor-pointer">
             <img src="<%= current_user.profile_avatar %>" alt="<%= current_user.display_name %>" class="w-10 h-10 rounded-full border-2 border-primary">
@@ -76,6 +82,7 @@
             </div>
           </div>
         </details>
+        </div>
       </div>
     </div>
   </div>

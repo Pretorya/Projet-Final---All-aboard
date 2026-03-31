@@ -26,6 +26,7 @@ class ResourcesController < ApplicationController
 
   def new
     @resource = Resource.new
+    @subjects = Subject.all.order(:name)
   end
 
   def create
@@ -43,6 +44,7 @@ class ResourcesController < ApplicationController
         redirect_to resources_path, notice: "Ressource soumise — elle sera visible après validation par un mentor ou un admin."
       end
     else
+      @subjects = Subject.all.order(:name)
       render :new, status: :unprocessable_entity
     end
   end

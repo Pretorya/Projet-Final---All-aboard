@@ -19,6 +19,7 @@ gem "devise"
 gem "jbuilder"
 gem "faraday"
 gem "nokogiri"
+gem "letter_opener"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

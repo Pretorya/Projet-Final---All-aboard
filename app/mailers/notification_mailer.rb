@@ -16,4 +16,11 @@ class NotificationMailer < ApplicationMailer
     @post      = comment.post
     mail(to: recipient.email, subject: "💬 #{@commenter.display_name} a répondu à ton post")
   end
+
+  def help_request(mentor, post)
+    @mentor = mentor
+    @post   = post
+    @author = post.user
+    mail(to: mentor.email, subject: "🆘 #{@author.display_name} a besoin d'aide — #{@post.subject.name}")
+  end
 end

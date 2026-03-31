@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_post, only: [:show, :track_view, :destroy]
+  before_action :set_post, only: [:show, :track_view, :destroy, :edit, :update, :help_mentor]
   before_action :authorize_admin!, only: [:destroy]
+  before_action :authorize_author!, only: [:edit, :update]
 
   def show
     record_view(@post.id)
@@ -14,6 +15,35 @@ class PostsController < ApplicationController
       partial: "feed/recently_viewed",
       locals: { recently_viewed: recently_viewed_posts }
     )
+  end
+
+  def help_mentor
+    unless @post.user == current_user
+      redirect_to authenticated_root_path, alert: "Accès non autorisé" and return
+    end
+
+    if @post.mentor_help_requested?
+      redirect_to post_path(@post), alert: "Tu as déjà demandé l'aide d'un mentor pour ce post."
+    else
+      @post.update!(mentor_help_requested: true)
+      redirect_to post_path(@post), notice: "Ta demande a été transmise aux mentors disponibles en #{@post.subject.name} !"
+    end
+  end
+
+  def edit
+    @subjects = Subject.all.order(:name)
+    @post.tag_list = @post.tags.map(&:name).join(", ")
+  end
+
+  def update
+    if @post.update(post_params.except(:tag_list))
+      @post.sync_tags!(post_params[:tag_list])
+      redirect_to post_path(@post), notice: "Post mis à jour avec succès."
+    else
+      @subjects = Subject.all.order(:name)
+      @post.tag_list = @post.tags.map(&:name).join(", ")
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def create
@@ -35,7 +65,10 @@ class PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.includes(:user, :subject, :tags, { comments: :user }, { likes: :user }, { bookmarks: :user }).find(params[:id])
+    @post = Post.includes(:user, :subject, :tags,
+                          { comments: :user },
+                          { likes: :user },
+                          { bookmarks: :user }).find(params[:id])
   end
 
   def record_view(post_id)
@@ -52,6 +85,10 @@ class PostsController < ApplicationController
 
   def authorize_admin!
     redirect_to authenticated_root_path, alert: "Accès non autorisé" unless current_user.admin?
+  end
+
+  def authorize_author!
+    redirect_to authenticated_root_path, alert: "Accès non autorisé" unless @post.user == current_user
   end
 
   def post_params
