@@ -45,15 +45,16 @@ Rails.application.routes.draw do
     end
 
     resources :conversations, path: "messages", only: [:index, :show, :create] do
-      resources :messages, only: :create do
+      resources :messages, only: [:create, :show, :update] do
         member do
           post :delete
+          get :edit
         end
       end
     end
 
     # Ressources mentor
-    resources :resources, only: [:index, :show, :new, :create]
+    resources :resources, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
     # Événements (publics)
     resources :events, only: [:index, :show]

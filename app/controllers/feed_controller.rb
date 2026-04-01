@@ -26,6 +26,7 @@ class FeedController < ApplicationController
       @posts = @posts.where(id: matching_ids)
     end
 
+    @recent_contributions = current_user.comments.includes(post: :subject).order(created_at: :desc).limit(5)
     @quick_tags = Tag.joins(:posts).distinct.ordered.limit(5)
     @top_contributors = User.includes(:comments, :messages).to_a
                             .sort_by { |user| [ -user.contribution_count, -user.rating.to_f ] }

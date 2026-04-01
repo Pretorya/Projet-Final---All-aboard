@@ -1,5 +1,7 @@
 class ResourcesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_resource, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_owner!, only: [:edit, :update, :destroy]
 
   def index
     @search_query = params[:q].to_s.strip
@@ -21,7 +23,6 @@ class ResourcesController < ApplicationController
   end
 
   def show
-    @resource = Resource.find(params[:id])
   end
 
   def new
@@ -49,7 +50,36 @@ class ResourcesController < ApplicationController
     end
   end
 
+  def edit
+    @subjects = Subject.all.order(:name)
+  end
+
+  def update
+    if @resource.update(resource_params.except(:tag_list))
+      @resource.sync_tags!(resource_params[:tag_list]) if resource_params[:tag_list]
+      redirect_to resource_path(@resource), notice: "Ressource mise à jour."
+    else
+      @subjects = Subject.all.order(:name)
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @resource.destroy
+    redirect_to resources_path, notice: "Ressource supprimée."
+  end
+
   private
+
+  def set_resource
+    @resource = Resource.find(params[:id])
+  end
+
+  def authorize_owner!
+    unless @resource.user == current_user || current_user.admin?
+      redirect_to resources_path, alert: "Accès non autorisé."
+    end
+  end
 
   def resource_params
     params.require(:resource).permit(:title, :body, :subject_id, :tag_list)
