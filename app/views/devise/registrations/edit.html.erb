@@ -98,15 +98,14 @@
           <p class="text-xs text-gray-500 mb-4">Sélectionne les matières dans lesquelles tu peux aider les étudiants.</p>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <% @subjects.each do |subject| %>
-              <% checked = current_user.competences.include?(subject) %>
               <label class="block cursor-pointer">
                 <input type="checkbox"
                        name="user[competence_ids][]"
                        value="<%= subject.id %>"
-                       <%= "checked" if checked %>
+                       <%= "checked" if current_user.competences.include?(subject) %>
                        class="peer sr-only">
                 <span class="flex items-center gap-2 p-3 rounded-xl border text-sm transition-colors cursor-pointer
-                             <%= checked ? 'border-primary bg-primary/10 text-white' : 'border-white/10 bg-white/5 text-gray-400 hover:border-primary/40' %>
+                             border-white/10 bg-white/5 text-gray-400 hover:border-primary/40
                              peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-white">
                   <i class="fas <%= subject.icon %>" style="color: <%= subject.accent_color %>;"></i>
                   <%= subject.name %>

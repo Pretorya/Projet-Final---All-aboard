@@ -42,7 +42,7 @@
           <div class="flex justify-center">
             <span class="text-xs text-gray-500 bg-white/5 px-3 py-1 rounded-full">Aujourd'hui</span>
           </div>
-          <%= render @messages %>
+          <%= render partial: "messages/message", collection: @messages, as: :message, locals: { viewer: current_user } %>
         </div>
 
         <div class="p-4 border-t border-white/10">

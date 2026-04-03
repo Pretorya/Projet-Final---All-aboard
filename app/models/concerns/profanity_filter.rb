@@ -42,7 +42,7 @@ module ProfanityFilter
   )
 
   included do
-    validate :no_profanity
+    before_save :check_moderation
   end
 
   private
@@ -51,14 +51,15 @@ module ProfanityFilter
     []
   end
 
-  def no_profanity
-    profanity_fields.each do |field|
-      value = send(field).to_s
-      next if value.blank?
+  def check_moderation
+    return if profanity_fields.empty?
 
-      if value.match?(BANNED_REGEX)
-        errors.add(field, :profanity, message: "contient un langage inapproprié")
-      end
+    flagged = profanity_fields.any? do |field|
+      value = send(field).to_s
+      next false if value.blank?
+      value.match?(BANNED_REGEX) || DenylistPattern.active.any? { |p| p.matches?(value) }
     end
+
+    self.flagged_for_moderation = true if flagged
   end
 end

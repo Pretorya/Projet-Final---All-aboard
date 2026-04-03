@@ -10,7 +10,7 @@
   <%= render "posts/post", post: @post, show_page: true %>
 
   <%# Section commentaires complète %>
-  <div class="glass rounded-2xl mt-4 overflow-hidden">
+  <div class="glass rounded-2xl mt-4">
     <div class="p-5 border-b border-white/10 flex items-center justify-between">
       <h2 class="font-semibold flex items-center gap-2">
         <i class="far fa-comments text-primary"></i>
@@ -19,8 +19,9 @@
     </div>
 
     <div id="post_<%= @post.id %>_comments" class="divide-y divide-white/5">
-      <% if @post.comments.any? %>
-        <% @post.comments.each do |comment| %>
+      <% visible_comments = current_user.admin? ? @post.comments : @post.comments.reject(&:flagged_for_moderation?) %>
+      <% if visible_comments.any? %>
+        <% visible_comments.each do |comment| %>
           <div class="p-5">
             <%= render "comments/comment", comment: comment %>
           </div>
@@ -33,7 +34,7 @@
       <% end %>
     </div>
 
-    <div class="p-5 border-t border-white/10 bg-white/3">
+    <div class="p-5 border-t border-white/10 bg-white/3 rounded-b-2xl">
       <%= form_with model: Comment.new, url: comments_path, class: "flex gap-3 items-start" do |form| %>
         <%= form.hidden_field :post_id, value: @post.id %>
         <img src="<%= current_user.profile_avatar %>" alt="<%= current_user.display_name %>" class="w-9 h-9 rounded-full flex-shrink-0 mt-1">

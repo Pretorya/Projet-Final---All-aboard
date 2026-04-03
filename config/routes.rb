@@ -10,16 +10,18 @@ Rails.application.routes.draw do
 
     resources :users, only: :show
 
-    resources :posts, only: [:create, :show] do
+    resources :posts, only: [:create, :show, :edit, :update] do
       member do
         post :delete
         post :track_view
+        post :help_mentor
       end
     end
 
-    resources :comments, only: :create do
+    resources :comments, only: [:create, :show, :update] do
       member do
         post :delete
+        get :edit
       end
     end
 
@@ -43,15 +45,16 @@ Rails.application.routes.draw do
     end
 
     resources :conversations, path: "messages", only: [:index, :show, :create] do
-      resources :messages, only: :create do
+      resources :messages, only: [:create, :show, :update] do
         member do
           post :delete
+          get :edit
         end
       end
     end
 
     # Ressources mentor
-    resources :resources, only: [:index, :show, :new, :create]
+    resources :resources, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
     # Événements (publics)
     resources :events, only: [:index, :show]
@@ -69,6 +72,14 @@ Rails.application.routes.draw do
 
     namespace :admin do
       get "dashboard", to: "dashboard#index"
+      get  "moderation",                          to: "moderation#index",          as: :moderation
+      post "moderation/posts/:id/approve",        to: "moderation#approve_post",   as: :approve_moderation_post
+      post "moderation/posts/:id/reject",         to: "moderation#reject_post",    as: :reject_moderation_post
+      post "moderation/comments/:id/approve",     to: "moderation#approve_comment", as: :approve_moderation_comment
+      post "moderation/comments/:id/reject",      to: "moderation#reject_comment", as: :reject_moderation_comment
+      resources :denylist_patterns, only: [:index, :create, :destroy] do
+        member { post :toggle }
+      end
       resources :posts,            only: [:index, :destroy]
       resources :users,            only: :index do
         member do

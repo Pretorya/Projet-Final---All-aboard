@@ -56,6 +56,12 @@ class ApplicationController < ActionController::Base
     @new_post = current_user.posts.build(education_level: current_user.education_level)
     @new_subject_request = current_user.subject_requests.build
     @conversation_count = current_user.unread_messages_count
+
+    if current_user.mentor?
+      subject_ids = current_user.competences.pluck(:id)
+      @mentor_pending_count = Resource.pending.where(subject_id: subject_ids).count +
+                              Post.where(mentor_help_requested: true, subject_id: subject_ids).count
+    end
   end
 
   def require_cgu_acceptance!

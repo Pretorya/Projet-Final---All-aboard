@@ -17,10 +17,13 @@
   </div>
 
   <div>
-    <%= f.label :subject_id, "Matière (optionnel)", class: "block text-sm font-medium text-gray-300 mb-2" %>
+    <div class="flex items-center gap-2 mb-2">
+      <%= f.label :subject_id, "Matière", class: "text-sm font-medium text-gray-300" %>
+      <span class="text-xs text-red-400">obligatoire</span>
+    </div>
     <%= f.select :subject_id,
         options_from_collection_for_select(@subjects, :id, :name, resource.subject_id),
-        { include_blank: "— Aucune matière —" },
+        { prompt: "— Sélectionner une matière —" },
         class: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" %>
   </div>
 
@@ -42,8 +45,9 @@
   </div>
 
   <div class="flex gap-3 pt-2">
-    <%= f.submit "Publier la ressource",
+    <%= f.submit (current_user.admin? || current_user.mentor? ? "Publier la ressource" : "Soumettre la ressource"),
         class: "px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl font-semibold transition-colors cursor-pointer" %>
-    <%= link_to "Annuler", mentor_dashboard_path, class: "px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl font-medium transition-colors" %>
+    <% cancel_path = current_user.admin? ? admin_dashboard_path : current_user.mentor? ? mentor_dashboard_path : resources_path %>
+    <%= link_to "Annuler", cancel_path, class: "px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl font-medium transition-colors" %>
   </div>
 <% end %>

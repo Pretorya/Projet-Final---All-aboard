@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_000007) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_30_000003) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000007) do
     t.string "code_language", default: "plaintext"
     t.text "code_snippet"
     t.datetime "created_at", null: false
+    t.boolean "flagged_for_moderation", default: false, null: false
     t.integer "post_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
@@ -78,6 +79,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000007) do
     t.string "topic"
     t.datetime "updated_at", null: false
     t.index ["direct_key"], name: "index_conversations_on_direct_key", unique: true
+  end
+
+  create_table "denylist_patterns", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "label", null: false
+    t.string "pattern", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "event_candidates", force: :cascade do |t|
@@ -167,7 +176,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_000007) do
     t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "education_level"
+    t.boolean "flagged_for_moderation", default: false, null: false
     t.integer "likes_count", default: 0, null: false
+    t.boolean "mentor_help_requested", default: false, null: false
     t.integer "status", default: 0, null: false
     t.integer "subject_id", null: false
     t.string "title", null: false

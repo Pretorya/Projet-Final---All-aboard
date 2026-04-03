@@ -109,6 +109,14 @@ body {
   display: none;
 }
 
+.chat-row--own .message-actions {
+  order: -1;
+}
+
+.message-actions {
+  flex-shrink: 0;
+}
+
 .flash-stack {
   position: fixed;
   top: 5rem;
